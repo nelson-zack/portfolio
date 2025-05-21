@@ -57,7 +57,7 @@ function App() {
         <section id="resume">
           <h2 className="text-3xl font-semibold mb-4">Resume</h2>
           <a
-            href="/resume.pdf"
+            href="/ZackNelson_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
