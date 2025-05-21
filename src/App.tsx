@@ -30,7 +30,7 @@ function App() {
               <h3 className="text-xl font-semibold">JobLog</h3>
               <p className="text-sm mb-2">Job application tracker built with React + FastAPI.</p>
               <a href="https://joblog-app.vercel.app" className="text-blue-600 hover:underline" target="_blank">Live Demo</a> |{" "}
-              <a href="https://github.com/nelson-zack/job-app-tracker" className="text-blue-600 hover:underline" target="_blank">GitHub</a>
+              <a href="https://github.com/nelson-zack/joblog" className="text-blue-600 hover:underline" target="_blank">GitHub</a>
             </div>
             {/* Add more projects later */}
           </div>
