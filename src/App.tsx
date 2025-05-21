@@ -45,7 +45,7 @@ function App() {
                 <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">PostgreSQL</span>
                 <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">Tailwind CSS</span>
               </div>
-              <a href="https://joblog-app.vercel.app" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">Live Demo</a>{" "}
+              <a href="https://joblog.zacknelson.dev/" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">Live Demo</a>{" "}
               |{" "}
               <a href="https://github.com/nelson-zack/joblog" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
