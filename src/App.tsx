@@ -31,7 +31,8 @@ function App() {
         <section id="projects">
           <h2 className="text-3xl font-semibold mb-4">Projects</h2>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="p-4 border rounded shadow hover:shadow-lg transition">
+            {/* JobLog Card */}
+            <div className="p-4 border rounded shadow hover:shadow-lg transition flex flex-col justify-between min-h-[460px]">
               <img
                 src="/joblog-thumb.jpg"
                 alt="Screenshot of JobLog"
@@ -45,28 +46,42 @@ function App() {
                 <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">PostgreSQL</span>
                 <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">Tailwind CSS</span>
               </div>
-              <a href="https://joblog.zacknelson.dev/" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">Live Demo</a>{" "}
-              |{" "}
-              <a href="https://github.com/nelson-zack/joblog" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <div className="mt-auto">
+                <a href="https://joblog.zacknelson.dev/" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">Live Demo</a>{" "}
+                |{" "}
+                <a href="https://github.com/nelson-zack/joblog" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </div>
             </div>
 
-            <div className="p-4 border rounded shadow hover:shadow-lg transition">
-              <img
-                src="/commit-companion-thumb.jpg"
-                alt="Screenshot of Commit Companion"
-                    className="w-full mb-2 rounded shadow-sm p-4 bg-black"
-              />
-              <h3 className="text-xl font-semibold">Commit Companion</h3>
-              <p className="text-sm mb-2">
-                AI-powered Git commit assistant that uses GPT to summarize staged diffs into clear, conventional messages. Supports tone customization, Git hook installation, and command-line usage.
-              </p>
-              <div className="flex flex-wrap gap-2 text-xs mb-2">
-                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">Python</span>
-                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">OpenAI API</span>
-                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">Git</span>
-                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">CLI</span>
+            {/* Commit Companion Card */}
+            <div className="p-4 border rounded shadow hover:shadow-lg transition flex flex-col min-h-[460px]">
+              <div className="flex-1 flex flex-col">
+                <img
+                  src="/commit-companion-thumb.jpg"
+                  alt="Screenshot of Commit Companion"
+                  className="w-full mb-2 rounded shadow-sm p-4 bg-black"
+                />
+                <h3 className="text-xl font-semibold">Commit Companion</h3>
+                <p className="text-sm mb-2">
+                  AI-powered Git commit assistant that uses GPT to summarize staged diffs into clear, conventional messages. Supports tone customization, Git hook installation, and command-line usage.
+                </p>
+                <div className="flex flex-wrap gap-2 text-xs mb-2">
+                  <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">Python</span>
+                  <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">OpenAI API</span>
+                  <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">Git</span>
+                  <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">CLI</span>
+                </div>
               </div>
-              <a href="https://github.com/nelson-zack/commit-companion" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <div className="mt-auto">
+                <a
+                  href="https://github.com/nelson-zack/commit-companion"
+                  className="text-blue-600 hover:underline hover:text-blue-800 transition"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GitHub
+                </a>
+              </div>
             </div>
           </div>
         </section>
