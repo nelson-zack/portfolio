@@ -23,7 +23,7 @@ function App() {
         <section id="about">
           <h2 className="text-3xl font-semibold mb-4">About Me</h2>
           <p className="max-w-2xl">
-            I’m a recent Computer Science graduate and a builder. I’ve created real-world tools like JobLog to solve my own needs and help others. I'm looking for opportunities in software engineering, preferably full-stack, where I can continue growing and solving meaningful problems.
+            I’m a recent Computer Science graduate and a builder focused on solving real problems with clean, practical software. I’ve developed tools like JobLog, a job application tracker with analytics, and Commit Companion, a GPT-powered CLI for smart Git commits. I’m currently seeking full-stack software engineering roles where I can grow, contribute meaningfully, and continue building things people actually use.
           </p>
         </section>
 
@@ -49,7 +49,25 @@ function App() {
               |{" "}
               <a href="https://github.com/nelson-zack/joblog" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
-            {/* Add more projects here */}
+
+            <div className="p-4 border rounded shadow hover:shadow-lg transition">
+              <img
+                src="/commit-companion-thumb.jpg"
+                alt="Screenshot of Commit Companion"
+                    className="w-full mb-2 rounded shadow-sm p-4 bg-black"
+              />
+              <h3 className="text-xl font-semibold">Commit Companion</h3>
+              <p className="text-sm mb-2">
+                AI-powered Git commit assistant that uses GPT to summarize staged diffs into clear, conventional messages. Supports tone customization, Git hook installation, and command-line usage.
+              </p>
+              <div className="flex flex-wrap gap-2 text-xs mb-2">
+                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">Python</span>
+                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">OpenAI API</span>
+                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">Git</span>
+                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">CLI</span>
+              </div>
+              <a href="https://github.com/nelson-zack/commit-companion" className="text-blue-600 hover:underline hover:text-blue-800 transition" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
           </div>
         </section>
 
