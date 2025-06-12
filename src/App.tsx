@@ -23,7 +23,7 @@ function App() {
         <section id="about">
           <h2 className="text-3xl font-semibold mb-4">About Me</h2>
           <p className="max-w-2xl">
-            I’m a recent Computer Science graduate and a builder focused on solving real problems with clean, practical software. I’ve developed tools like JobLog, a job application tracker with analytics, and Commit Companion, a GPT-powered CLI for smart Git commits. I’m currently seeking full-stack software engineering roles where I can grow, contribute meaningfully, and continue building things people actually use.
+            I’m a U.S. Marine Corps veteran and recent Computer Science graduate focused on solving real problems with clean, practical software. I’ve developed tools like JobLog, a job application tracker with analytics, and Commit Companion, a GPT-powered CLI for smart Git commits. I’m currently seeking full-stack software engineering roles where I can grow, contribute meaningfully, and continue building things people actually use.
           </p>
         </section>
 
