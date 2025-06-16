@@ -90,7 +90,7 @@ function App() {
           <SiNodedotjs /> Node.js
         </span>
         <span className="flex items-center gap-1 bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">
-          <img src="/icons/axios.png" alt="Axios logo" className="w-4 h-4" />
+          <img src="/icons/axios.png" alt="Axios logo" className="w-4 h-4 grayscale" />
           Axios
         </span>
         <span className="flex items-center gap-1 bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">
