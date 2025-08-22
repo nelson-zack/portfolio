@@ -104,9 +104,10 @@ function App() {
             projects include <strong>JobLog</strong>, a job application tracker
             with built-in analytics, and <strong>Commit Companion</strong>, a
             Python CLI powered by GPT for generating consistent Git commit
-            messages. I’m seeking a full-stack engineering role where I can
-            apply my skills in scalable backend systems, responsive UI, and
-            cloud deployment to deliver tools that create real impact.
+            messages, <strong>published on PyPI</strong>. I’m seeking a
+            full-stack engineering role where I can apply my skills in scalable
+            backend systems, responsive UI, and cloud deployment to deliver
+            tools that create real impact.
           </p>
         </section>
 
@@ -306,8 +307,9 @@ function App() {
                 </p>
                 <p className='text-sm mb-2'>
                   <strong>Commit Companion</strong> is a GPT-powered CLI that
-                  summarizes staged diffs into smart Git commit messages.
-                  Supports tone customization and Git hook automation.
+                  summarizes staged diffs into smart Git commit messages,
+                  <strong> published on PyPI</strong>. Supports tone
+                  customization and Git hook automation.
                 </p>
               </div>
               <div className='mt-2'>
@@ -318,6 +320,15 @@ function App() {
                   rel='noopener noreferrer'
                 >
                   GitHub
+                </a>{' '}
+                |{' '}
+                <a
+                  href='https://pypi.org/project/commit-companion/'
+                  className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  PyPI
                 </a>
               </div>
             </div>
