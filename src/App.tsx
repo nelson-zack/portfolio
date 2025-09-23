@@ -24,8 +24,8 @@ import {
   SiJavascript,
   SiCplusplus
 } from 'react-icons/si';
-import { useEffect, useRef, useState } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { FiCopy, FiCheck, FiSearch } from 'react-icons/fi';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -35,14 +35,25 @@ type Command = {
   title: string;
   subtitle: string;
   href: string;
-  type: 'section' | 'external';
+  type: 'section' | 'external' | 'theme';
+};
+
+type ThemeId = 'cyan' | 'magenta' | 'amber' | 'orange' | 'red' | 'green';
+
+type ThemeDefinition = {
+  id: ThemeId;
+  label: string;
+  description: string;
+  accent: string;
+  accentHover: string;
+  accentFaint: string;
 };
 
 const SectionDivider = () => (
   <div className='relative my-12 h-12 overflow-hidden'>
-    <div className='absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.35)_0%,rgba(34,211,238,0.15)_40%,transparent_70%)] blur-2xl opacity-60'></div>
-    <div className='absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(34,211,238,0.2)_0,rgba(34,211,238,0.2)_1px,transparent_1px,transparent_12px)] opacity-30'></div>
-    <div className='absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-400 to-transparent'></div>
+    <div className='absolute inset-0 bg-[radial-gradient(circle_at_center,var(--accent-400,rgba(34,211,238,0.35))_0%,color-mix(in_srgb,var(--accent-400,rgba(34,211,238,0.35))_40%,transparent)_40%,transparent_70%)] blur-2xl opacity-60'></div>
+    <div className='absolute inset-0 bg-[repeating-linear-gradient(90deg,color-mix(in_srgb,var(--accent-400,rgba(34,211,238,0.35))_40%,transparent)_0,color-mix(in_srgb,var(--accent-400,rgba(34,211,238,0.35))_40%,transparent)_1px,transparent_1px,transparent_12px)] opacity-30'></div>
+    <div className='absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-[color:var(--accent-400,#22d3ee)] to-transparent'></div>
   </div>
 );
 
@@ -52,6 +63,77 @@ function App() {
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [paletteQuery, setPaletteQuery] = useState('');
   const paletteInputRef = useRef<HTMLInputElement>(null);
+  const [activeTheme, setActiveTheme] = useState<ThemeId>('cyan');
+
+  // Theme options surfaced in the command palette; default is cyan.
+  const themes: ThemeDefinition[] = useMemo(
+    () => [
+      {
+        id: 'cyan',
+        label: 'Cyan Sonic',
+        description: 'Original neon palette',
+        accent: '#22d3ee',
+        accentHover: '#38e0ff',
+        accentFaint: 'rgba(34, 211, 238, 0.15)'
+      },
+      {
+        id: 'magenta',
+        label: 'Magenta Pulse',
+        description: 'Terminal magenta highlights',
+        accent: '#f472b6',
+        accentHover: '#fb87c3',
+        accentFaint: 'rgba(244, 114, 182, 0.15)'
+      },
+      {
+        id: 'amber',
+        label: 'Amber Circuit',
+        description: 'Vintage terminal amber',
+        accent: '#f59e0b',
+        accentHover: '#fbbf24',
+        accentFaint: 'rgba(245, 158, 11, 0.15)'
+      },
+      {
+        id: 'orange',
+        label: 'Orange Beacon',
+        description: 'High-contrast deep orange highlights',
+        accent: '#ff6b3d',
+        accentHover: '#ff9a6f',
+        accentFaint: 'rgba(255, 107, 61, 0.18)'
+      },
+      {
+        id: 'red',
+        label: 'Code Red',
+        description: 'High-alert deep crimson glow',
+        accent: '#b91c1c',
+        accentHover: '#ef4444',
+        accentFaint: 'rgba(185, 28, 28, 0.2)'
+      },
+      {
+        id: 'green',
+        label: 'Matrix Green',
+        description: 'Retro phosphor terminal',
+        accent: '#22c55e',
+        accentHover: '#4ade80',
+        accentFaint: 'rgba(34, 197, 94, 0.18)'
+      }
+    ],
+    []
+  );
+
+  const currentTheme = useMemo(() => {
+    return themes.find((theme) => theme.id === activeTheme) ?? themes[0];
+  }, [themes, activeTheme]);
+
+  // Map the active theme into CSS custom properties so the UI can update live.
+  const themeStyles = useMemo<CSSProperties>(() => {
+    return {
+      '--accent-500': currentTheme.accent,
+      '--accent-400': currentTheme.accentHover,
+      '--accent-100': currentTheme.accentFaint,
+      '--accent-border': `color-mix(in srgb, ${currentTheme.accent} 70%, black)`,
+      '--accent-shadow': `${currentTheme.accent}40`
+    } as CSSProperties;
+  }, [currentTheme]);
 
   const handleCopy = (id: string, value: string) => {
     navigator.clipboard.writeText(value).then(() => {
@@ -130,7 +212,14 @@ function App() {
       subtitle: 'pypi.org/project/commit-companion',
       href: 'https://pypi.org/project/commit-companion/',
       type: 'external'
-    }
+    },
+    ...themes.map((theme) => ({
+      id: `theme-${theme.id}`,
+      title: `Theme · ${theme.label}`,
+      subtitle: theme.description,
+      href: theme.id,
+      type: 'theme' as const
+    }))
   ];
 
   useEffect(() => {
@@ -182,6 +271,13 @@ function App() {
   }, [isPaletteOpen]);
 
   const handleCommandSelect = (command: Command) => {
+    // Theme commands update the palette without closing it.
+    if (command.type === 'theme') {
+      setActiveTheme(command.href as ThemeId);
+      setPaletteQuery('');
+      return;
+    }
+
     setIsPaletteOpen(false);
     setPaletteQuery('');
 
@@ -260,9 +356,9 @@ function App() {
   }, []);
 
   return (
-    <div className='relative min-h-screen bg-[#101010] text-white font-sans flex flex-col'>
+    <div className='relative min-h-screen bg-[#101010] text-white font-sans flex flex-col' style={themeStyles}>
       <div
-        className='fixed top-0 left-0 h-1 bg-cyan-400 z-50 transition-[width] duration-200'
+        className='fixed top-0 left-0 h-1 bg-accent z-50 transition-[width] duration-200'
         style={{ width: `${scrollProgress}%` }}
         aria-hidden='true'
       ></div>
@@ -278,9 +374,9 @@ function App() {
             }
           }}
         >
-          <div className='w-full max-w-xl overflow-hidden rounded-xl border border-cyan-500/40 bg-[#0a0f12] text-white shadow-xl shadow-cyan-500/10'>
-            <div className='flex items-center gap-3 border-b border-cyan-500/30 px-4 py-3'>
-              <FiSearch className='text-cyan-400' aria-hidden='true' />
+          <div className='w-full max-w-xl overflow-hidden rounded-xl border border-accent-soft bg-[#0a0f12] text-white shadow-xl shadow-accent-soft'>
+            <div className='flex items-center gap-3 border-b border-accent-soft px-4 py-3'>
+              <FiSearch className='text-accent' aria-hidden='true' />
               <input
                 ref={paletteInputRef}
                 type='text'
@@ -300,14 +396,28 @@ function App() {
                     <button
                       type='button'
                       onClick={() => handleCommandSelect(command)}
-                      className='flex w-full items-start justify-between gap-3 px-4 py-3 text-left transition hover:bg-cyan-500/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60'
+                      className='flex w-full items-start justify-between gap-3 px-4 py-3 text-left transition hover:bg-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
+                      style={
+                        command.type === 'theme' && command.href === activeTheme
+                          ? { backgroundColor: 'color-mix(in srgb, var(--accent-100, rgba(34, 211, 238, 0.15)) 85%, transparent)' }
+                          : undefined
+                      }
                     >
                       <div>
                         <div className='text-sm font-medium text-white'>{command.title}</div>
                         <div className='text-xs text-gray-400 font-mono'>{command.subtitle}</div>
                       </div>
-                      <span className='text-[10px] uppercase tracking-[0.2em] text-cyan-500/70'>
-                        {command.type === 'external' ? 'external' : 'section'}
+                      <span className='flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-accent-soft'>
+                        {command.type === 'external'
+                          ? 'external'
+                          : command.type === 'section'
+                          ? 'section'
+                          : activeTheme === command.href
+                          ? 'active'
+                          : 'theme'}
+                        {command.type === 'theme' && command.href === activeTheme && (
+                          <FiCheck aria-hidden='true' className='text-accent' />
+                        )}
                       </span>
                     </button>
                   </li>
@@ -318,8 +428,8 @@ function App() {
                 </li>
               )}
             </ul>
-            <div className='border-t border-cyan-500/20 bg-[#090d10] px-4 py-3 text-[10px] uppercase tracking-[0.3em] text-gray-500'>
-              Press <span className='text-cyan-400'>Esc</span> or click outside to close · Shortcut <span className='text-cyan-400'>⌘</span>/<span className='text-cyan-400'>Ctrl</span> + <span className='text-cyan-400'>K</span>
+            <div className='border-t border-accent-soft bg-[#090d10] px-4 py-3 text-[10px] uppercase tracking-[0.3em] text-gray-500'>
+              Press <span className='text-accent'>Esc</span> or click outside to close · Shortcut <span className='text-accent'>⌘</span>/<span className='text-accent'>Ctrl</span> + <span className='text-accent'>K</span>
             </div>
           </div>
         </div>
@@ -330,12 +440,12 @@ function App() {
           className='absolute h-64 w-64 rounded-full opacity-0 transition-opacity duration-500 blur-3xl'
           style={{
             background:
-              'radial-gradient(circle, rgba(34,211,238,0.6) 0%, rgba(34,211,238,0.25) 45%, rgba(34,211,238,0.08) 70%, transparent 100%)'
+              'radial-gradient(circle, color-mix(in srgb, var(--accent-500, #22d3ee) 90%, white) 0%, color-mix(in srgb, var(--accent-500, #22d3ee) 55%, transparent) 45%, color-mix(in srgb, var(--accent-500, #22d3ee) 18%, transparent) 70%, transparent 100%)'
           }}
         ></div>
       </div>
       {/* Header */}
-      <header className='bg-[#101010] text-white p-4 border-b border-cyan-600'>
+      <header className='bg-[#101010] text-white p-4 border-b border-b-[color:var(--accent-border,#0e7490)]'>
         <div className='container mx-auto flex flex-col md:flex-row justify-between items-center gap-4'>
           <div>
             <div className='text-xs text-gray-400 font-mono mb-1 animate-pulse'>
@@ -345,7 +455,7 @@ function App() {
             <p className='text-sm mt-1 text-gray-400 font-light tracking-wide'>
               Coding with precision. Building with purpose.
             </p>
-            <span className='inline-block text-xs text-gray-400 font-mono mt-1 overflow-hidden border-r-[6px] border-cyan-400 sm:animate-type whitespace-nowrap w-[36ch] sm:w-[56ch]'>
+            <span className='inline-block text-xs text-gray-400 font-mono mt-1 overflow-hidden border-r-[6px] border-[color:var(--accent-400,#38e0ff)] sm:animate-type whitespace-nowrap w-[36ch] sm:w-[56ch]'>
               <span className='hidden sm:inline'>
                 now: refining projects and applying to full-stack roles
               </span>
@@ -354,35 +464,35 @@ function App() {
               <div>now: refining projects and applying to</div>
               <div>
                 full-stack roles
-                <span className='inline-block border-r-[6px] border-cyan-400 animate-blink ml-1 h-[1em] align-middle'></span>
+                <span className='inline-block border-r-[6px] border-[color:var(--accent-400,#38e0ff)] animate-blink ml-1 h-[1em] align-middle'></span>
               </div>
             </div>
           </div>
           <nav className='mt-2 md:mt-0 space-x-4'>
             <a
               href='#about'
-              className='hover:underline hover:text-cyan-400 underline-offset-4 decoration-2 transition'
+              className='hover:underline hover:text-accent-soft underline-offset-4 decoration-2 transition'
               aria-label='About section'
             >
               About
             </a>
             <a
               href='#projects'
-              className='hover:underline hover:text-cyan-400 underline-offset-4 decoration-2 transition'
+              className='hover:underline hover:text-accent-soft underline-offset-4 decoration-2 transition'
               aria-label='Projects section'
             >
               Projects
             </a>
             <a
               href='#resume'
-              className='hover:underline hover:text-cyan-400 underline-offset-4 decoration-2 transition'
+              className='hover:underline hover:text-accent-soft underline-offset-4 decoration-2 transition'
               aria-label='Resume section'
             >
               Resume
             </a>
             <a
               href='#contact'
-              className='hover:underline hover:text-cyan-400 underline-offset-4 decoration-2 transition'
+              className='hover:underline hover:text-accent-soft underline-offset-4 decoration-2 transition'
               aria-label='Contact section'
             >
               Contact
@@ -393,10 +503,10 @@ function App() {
           <button
             type='button'
             onClick={() => setIsPaletteOpen(true)}
-            className='group inline-flex w-full items-center justify-center gap-2 rounded border border-cyan-500/40 bg-[#0e1417] px-3 py-1.5 text-xs font-mono text-cyan-300 transition hover:border-cyan-400 hover:text-cyan-100 md:w-auto md:justify-end'
+            className='group inline-flex w-full items-center justify-center gap-2 rounded border border-accent-soft bg-[#0e1417] px-3 py-1.5 text-xs font-mono text-accent transition hover:border-accent hover:text-white md:w-auto md:justify-end'
           >
             Quick Jump
-            <span className='flex items-center gap-1 rounded bg-[#091015] px-2 py-[2px] text-[10px] uppercase tracking-[0.3em] text-cyan-400/80 transition group-hover:text-cyan-200'>
+            <span className='flex items-center gap-1 rounded bg-[#091015] px-2 py-[2px] text-[10px] uppercase tracking-[0.3em] text-accent-soft transition group-hover:text-white/80'>
               ⌘
               <span className='text-gray-500 group-hover:text-gray-300'>/</span>
               Ctrl + K
@@ -428,7 +538,7 @@ function App() {
 
         {/* Skills Section */}
         <section id='skills' data-aos='fade-up'>
-          <h2 className='text-3xl font-semibold tracking-wide mb-4 border-b border-cyan-800 pb-1 inline-block'>
+          <h2 className='text-3xl font-semibold tracking-wide mb-4 border-b border-b-[color:color-mix(in_srgb,var(--accent-border,#0e7490)_40%,transparent)] pb-1 inline-block'>
             Skills
           </h2>
           <div className='space-y-2'>
@@ -553,15 +663,15 @@ function App() {
 
         {/* Projects Section */}
         <section id='projects' data-aos='fade-up'>
-          <h2 className='text-3xl font-semibold tracking-wide mt-4 mb-4 border-b border-cyan-800 pb-1 inline-block'>
+          <h2 className='text-3xl font-semibold tracking-wide mt-4 mb-4 border-b border-b-[color:color-mix(in_srgb,var(--accent-border,#0e7490)_40%,transparent)] pb-1 inline-block'>
             Projects
           </h2>
           <div className='grid md:grid-cols-2 gap-8'>
             {/* Job Radar Card */}
-            <div className='group relative rounded-lg p-[1px] bg-gradient-to-r from-cyan-500/0 via-cyan-500/0 to-cyan-500/0 bg-[length:200%_200%] transition duration-500 hover:from-cyan-500/20 hover:via-cyan-400/70 hover:to-cyan-500/20 hover:animate-border-pan'>
+            <div className='group relative rounded-lg p-[1px] accent-shell transition duration-500'>
               <div
                 title='Monitor ATS job boards and surface hiring insights'
-                className='rounded-lg border border-cyan-500/20 bg-[#101010] shadow transition hover:shadow-[0_0_0_3px_#22d3ee,0_0_12px_#22d3ee] hover:scale-[1.01] motion-safe:transition-transform motion-safe:duration-300 flex flex-col justify-between min-h-[500px] p-4'
+                className='rounded-lg border border-accent-soft bg-[#101010] shadow transition hover:shadow-accent hover:scale-[1.01] motion-safe:transition-transform motion-safe:duration-300 flex flex-col justify-between min-h-[500px] p-4'
               >
                 <div className='flex-1 flex flex-col'>
                   <img
@@ -588,7 +698,7 @@ function App() {
                 <div className='mt-2'>
                   <a
                     href='https://jobradar.zacknelson.dev/'
-                    className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                    className='text-accent hover:underline hover:text-accent-soft transition font-mono'
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -597,7 +707,7 @@ function App() {
                   |{' '}
                   <a
                     href='https://github.com/nelson-zack/job-radar'
-                    className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                    className='text-accent hover:underline hover:text-accent-soft transition font-mono'
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -608,10 +718,10 @@ function App() {
             </div>
 
             {/* Job Log Card */}
-            <div className='group relative rounded-lg p-[1px] bg-gradient-to-r from-cyan-500/0 via-cyan-500/0 to-cyan-500/0 bg-[length:200%_200%] transition duration-500 hover:from-cyan-500/20 hover:via-cyan-400/70 hover:to-cyan-500/20 hover:animate-border-pan'>
+            <div className='group relative rounded-lg p-[1px] accent-shell transition duration-500'>
               <div
                 title='Track your job applications with analytics and tags'
-                className='rounded-lg border border-cyan-500/20 bg-[#101010] shadow transition hover:shadow-[0_0_0_3px_#22d3ee,0_0_12px_#22d3ee] hover:scale-[1.01] motion-safe:transition-transform motion-safe:duration-300 flex flex-col justify-between min-h-[500px] p-4'
+                className='rounded-lg border border-accent-soft bg-[#101010] shadow transition hover:shadow-accent hover:scale-[1.01] motion-safe:transition-transform motion-safe:duration-300 flex flex-col justify-between min-h-[500px] p-4'
               >
                 <div className='flex-1 flex flex-col'>
                   <img
@@ -637,7 +747,7 @@ function App() {
                 <div className='mt-2'>
                   <a
                     href='https://joblog.zacknelson.dev/'
-                    className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                    className='text-accent hover:underline hover:text-accent-soft transition font-mono'
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -646,7 +756,7 @@ function App() {
                   |{' '}
                   <a
                     href='https://github.com/nelson-zack/joblog'
-                    className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                    className='text-accent hover:underline hover:text-accent-soft transition font-mono'
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -657,10 +767,10 @@ function App() {
             </div>
 
             {/* Commit Companion Card */}
-            <div className='group relative rounded-lg p-[1px] bg-gradient-to-r from-cyan-500/0 via-cyan-500/0 to-cyan-500/0 bg-[length:200%_200%] transition duration-500 hover:from-cyan-500/20 hover:via-cyan-400/70 hover:to-cyan-500/20 hover:animate-border-pan'>
+            <div className='group relative rounded-lg p-[1px] accent-shell transition duration-500'>
               <div
                 title='Generate smart Git commit messages with GPT'
-                className='rounded-lg border border-cyan-500/20 bg-[#101010] shadow transition hover:shadow-[0_0_0_3px_#22d3ee,0_0_12px_#22d3ee] hover:scale-[1.01] motion-safe:transition-transform motion-safe:duration-300 flex flex-col justify-between min-h-[500px] p-4'
+                className='rounded-lg border border-accent-soft bg-[#101010] shadow transition hover:shadow-accent hover:scale-[1.01] motion-safe:transition-transform motion-safe:duration-300 flex flex-col justify-between min-h-[500px] p-4'
               >
                 <div className='flex-1 flex flex-col'>
                   <img
@@ -686,7 +796,7 @@ function App() {
                 <div className='mt-2'>
                   <a
                     href='https://github.com/nelson-zack/commit-companion'
-                    className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                    className='text-accent hover:underline hover:text-accent-soft transition font-mono'
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -695,7 +805,7 @@ function App() {
                   |{' '}
                   <a
                     href='https://pypi.org/project/commit-companion/'
-                    className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                    className='text-accent hover:underline hover:text-accent-soft transition font-mono'
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -717,7 +827,7 @@ function App() {
             aria-label="Download Zack Nelson's resume (PDF)"
             target='_blank'
             rel='noopener noreferrer'
-            className='inline-block bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-400 transition font-mono uppercase tracking-wide hover:shadow-[0_0_8px_#22d3ee]'
+            className='inline-block bg-accent text-[#061317] px-4 py-2 rounded transition font-mono uppercase tracking-wide hover:bg-[color:var(--accent-400,#38e0ff)] hover:shadow-accent'
           >
             View My Resume
           </a>
@@ -727,7 +837,7 @@ function App() {
               href='https://github.com/nelson-zack/portfolio'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-cyan-600 underline hover:text-cyan-400 transition'
+              className='text-accent underline hover:text-accent-soft transition'
             >
               view source
             </a>
@@ -744,14 +854,14 @@ function App() {
               <span>Email:</span>
               <a
                 href='mailto:zacknelson15@gmail.com'
-                className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                className='text-accent hover:underline hover:text-accent-soft transition font-mono'
               >
                 zacknelson15@gmail.com
               </a>
               <button
                 type='button'
                 onClick={() => handleCopy('email', 'zacknelson15@gmail.com')}
-                className='text-cyan-500 hover:text-cyan-300 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 rounded'
+                className='text-accent hover:text-accent-soft transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded'
                 aria-label='Copy email address'
               >
                 {copiedId === 'email' ? <FiCheck aria-hidden='true' /> : <FiCopy aria-hidden='true' />}
@@ -761,7 +871,7 @@ function App() {
               <span>GitHub:</span>
               <a
                 href='https://github.com/nelson-zack'
-                className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                className='text-accent hover:underline hover:text-accent-soft transition font-mono'
                 target='_blank'
                 rel='noopener noreferrer'
               >
@@ -770,7 +880,7 @@ function App() {
               <button
                 type='button'
                 onClick={() => handleCopy('github', 'https://github.com/nelson-zack')}
-                className='text-cyan-500 hover:text-cyan-300 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 rounded'
+                className='text-accent hover:text-accent-soft transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded'
                 aria-label='Copy GitHub profile URL'
               >
                 {copiedId === 'github' ? <FiCheck aria-hidden='true' /> : <FiCopy aria-hidden='true' />}
@@ -780,7 +890,7 @@ function App() {
               <span>LinkedIn:</span>
               <a
                 href='https://www.linkedin.com/in/nelsonzack/'
-                className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                className='text-accent hover:underline hover:text-accent-soft transition font-mono'
                 target='_blank'
                 rel='noopener noreferrer'
               >
@@ -789,7 +899,7 @@ function App() {
               <button
                 type='button'
                 onClick={() => handleCopy('linkedin', 'https://www.linkedin.com/in/nelsonzack/')}
-                className='text-cyan-500 hover:text-cyan-300 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 rounded'
+                className='text-accent hover:text-accent-soft transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded'
                 aria-label='Copy LinkedIn profile URL'
               >
                 {copiedId === 'linkedin' ? <FiCheck aria-hidden='true' /> : <FiCopy aria-hidden='true' />}
@@ -801,7 +911,7 @@ function App() {
 
       {/* Footer */}
       <footer className='text-center text-sm text-gray-500 py-6 space-y-1'>
-        <p className='text-cyan-400 font-mono'>
+        <p className='text-accent font-mono'>
           Building one commit at a time.
         </p>
         <p className='font-mono'>

@@ -1,3 +1,80 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --accent-500: #22d3ee;
+  --accent-400: #38e0ff;
+  --accent-100: rgba(34, 211, 238, 0.15);
+  --accent-border: #0e7490;
+  --accent-shadow: rgba(34, 211, 238, 0.4);
+}
+
+@layer components {
+  .accent-shell {
+    background: linear-gradient(120deg, transparent, transparent);
+    background-size: 200% 200%;
+    transition: background 0.5s ease;
+  }
+
+  .group:hover .accent-shell {
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      color-mix(in srgb, var(--accent-500, #22d3ee) 45%, transparent) 55%,
+      transparent 100%
+    );
+    animation: border-pan 6s linear infinite;
+  }
+}
+
+@layer utilities {
+  .text-accent {
+    color: var(--accent-500, #22d3ee);
+  }
+
+  .text-accent-soft {
+    color: var(--accent-400, #38e0ff);
+  }
+
+  .border-accent {
+    border-color: var(--accent-border, #0e7490);
+  }
+
+  .border-accent-soft {
+    border-color: color-mix(in srgb, var(--accent-400, #38e0ff) 60%, transparent);
+  }
+
+  .bg-accent {
+    background-color: var(--accent-500, #22d3ee);
+  }
+
+  .bg-accent-soft {
+    background-color: var(--accent-100, rgba(34, 211, 238, 0.15));
+  }
+
+  .hover\:text-accent-soft:hover {
+    color: var(--accent-400, #38e0ff);
+  }
+
+  .hover\:bg-accent-soft:hover {
+    background-color: var(--accent-100, rgba(34, 211, 238, 0.15));
+  }
+
+  .hover\:border-accent:hover {
+    border-color: var(--accent-500, #22d3ee);
+  }
+
+  .focus-visible\:ring-accent:focus-visible {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-400, #38e0ff) 65%, transparent);
+  }
+
+  .hover\:shadow-accent:hover {
+    box-shadow: 0 0 0 3px var(--accent-500, #22d3ee),
+      0 0 12px color-mix(in srgb, var(--accent-500, #22d3ee) 60%, transparent);
+  }
+
+  .shadow-accent-soft {
+    box-shadow: 0 20px 45px var(--accent-shadow, rgba(34, 211, 238, 0.4));
+  }
+}
