@@ -30,7 +30,7 @@ import 'aos/dist/aos.css';
 
 function App() {
   useEffect(() => {
-    AOS.init({ duration: 700, once: true });
+    AOS.init({ duration: 700, once: false });
   }, []);
   return (
     <div className='min-h-screen bg-[#101010] text-white font-sans flex flex-col'>
@@ -100,14 +100,15 @@ function App() {
           </h2>
           <p className='max-w-2xl font-light text-gray-300 leading-relaxed'>
             I’m a U.S. Marine Corps veteran and recent Computer Science graduate
-            with experience building and deploying full-stack applications. My
-            projects include <strong>JobLog</strong>, a job application tracker
-            with built-in analytics, and <strong>Commit Companion</strong>, a
-            Python CLI powered by GPT for generating consistent Git commit
-            messages, <strong>published on PyPI</strong>. I’m seeking a
-            full-stack engineering role where I can apply my skills in scalable
-            backend systems, responsive UI, and cloud deployment to deliver
-            tools that create real impact.
+            focused on shipping reliable, full-stack products end to end. I’ve
+            deployed <strong>Job Radar</strong>, a hiring intelligence dashboard
+            for remote junior SWE roles, <strong>Job Log</strong>, a kanban-style
+            job tracker with analytics and automations, and
+            <strong> Commit Companion</strong>, a GPT-powered CLI for consistent
+            Git commits <strong>published on PyPI</strong>. I’m now looking for a
+            full-stack engineering role where I can deliver resilient backend
+            systems, polished interfaces, and thoughtful developer tooling at
+            scale.
           </p>
         </section>
 
@@ -242,7 +243,55 @@ function App() {
             Projects
           </h2>
           <div className='grid md:grid-cols-2 gap-8'>
-            {/* JobLog Card */}
+            {/* Job Radar Card */}
+            <div
+              title='Monitor ATS job boards and surface hiring insights'
+              className='p-4 border rounded shadow transition hover:shadow-[0_0_0_3px_#22d3ee,0_0_12px_#22d3ee] hover:scale-[1.01] motion-safe:transition-transform motion-safe:duration-300 flex flex-col justify-between min-h-[500px]'
+            >
+              <div className='flex-1 flex flex-col'>
+                <img
+                  src='/job-radar-thumb.jpg'
+                  alt='Screenshot of Job Radar dashboard'
+                  className='w-full mb-2 rounded shadow-sm'
+                />
+                <h3 className='text-xl font-semibold'>Job Radar</h3>
+                <p className='text-xs text-gray-500 font-mono'>
+                  Stack: FastAPI + Next.js + PostgreSQL
+                </p>
+                <p className='text-xs text-gray-600 mb-2 font-mono'>
+                  <strong>Role:</strong> Sole developer · Fullstack
+                </p>
+                <p className='text-sm mb-2'>
+                  <strong>Job Radar</strong> scrapes Greenhouse boards and curated
+                  GitHub repositories to spotlight remote junior SWE roles,
+                  normalizes each listing, and surfaces sourcing insights with
+                  data quality checkpoints. Built with an ingestion pipeline
+                  designed to expand into additional ATS providers as they roll
+                  out.
+                </p>
+              </div>
+              <div className='mt-2'>
+                <a
+                  href='https://jobradar.zacknelson.dev/'
+                  className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  Live Demo
+                </a>{' '}
+                |{' '}
+                <a
+                  href='https://github.com/nelson-zack/job-radar'
+                  className='text-cyan-600 hover:underline hover:text-cyan-400 transition font-mono'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  GitHub
+                </a>
+              </div>
+            </div>
+
+            {/* Job Log Card */}
             <div
               title='Track your job applications with analytics and tags'
               className='p-4 border rounded shadow transition hover:shadow-[0_0_0_3px_#22d3ee,0_0_12px_#22d3ee] hover:scale-[1.01] motion-safe:transition-transform motion-safe:duration-300 flex flex-col justify-between min-h-[500px]'
@@ -250,10 +299,10 @@ function App() {
               <div className='flex-1 flex flex-col'>
                 <img
                   src='/joblog-thumb.jpg'
-                  alt='Screenshot of JobLog'
+                  alt='Screenshot of Job Log'
                   className='w-full mb-2 rounded shadow-sm'
                 />
-                <h3 className='text-xl font-semibold'>JobLog</h3>
+                <h3 className='text-xl font-semibold'>Job Log</h3>
                 <p className='text-xs text-gray-500 font-mono'>
                   Stack: React + FastAPI + PostgreSQL
                 </p>
@@ -261,9 +310,11 @@ function App() {
                   <strong>Role:</strong> Sole developer · Fullstack
                 </p>
                 <p className='text-sm mb-2'>
-                  <strong>JobLog</strong> is a full-stack job tracker built with
-                  React, FastAPI, and PostgreSQL. Includes custom analytics,
-                  tag-based filtering, and CSV export.
+                  <strong>Job Log</strong> is a full-stack job tracker that
+                  consolidates applications into a kanban-style pipeline with
+                  analytics, reminders, and interview timelines. Offers tag-based
+                  filtering, daily digest emails, and CSV exports to keep the job
+                  search organized end to end.
                 </p>
               </div>
               <div className='mt-2'>
@@ -306,10 +357,11 @@ function App() {
                   <strong>Role:</strong> Sole developer · Fullstack
                 </p>
                 <p className='text-sm mb-2'>
-                  <strong>Commit Companion</strong> is a GPT-powered CLI that
-                  summarizes staged diffs into smart Git commit messages,
-                  <strong> published on PyPI</strong>. Supports tone
-                  customization and Git hook automation.
+                  <strong>Commit Companion</strong> is an open-source CLI that
+                  turns staged diffs into consistent Git commit messages with GPT,
+                  <strong> published on PyPI</strong>. Supports Conventional
+                  Commits, tone presets, and optional Git hook automation for
+                  hands-free commits.
                 </p>
               </div>
               <div className='mt-2'>
