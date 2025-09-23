@@ -13,6 +13,7 @@ module.exports = {
       animation: {
         type: 'typing 7s steps(56, end) infinite, blink 1.2s step-end infinite',
         blink: 'blink 1.2s step-end infinite',
+        'border-pan': 'border-pan 6s linear infinite',
       },
       keyframes: {
         typing: {
@@ -23,6 +24,11 @@ module.exports = {
         blink: {
           '0%, 100%': { borderColor: 'transparent' },
           '50%': { borderColor: '#22d3ee' }, // cyan-400
+        },
+        'border-pan': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
         },
       },
     },
