@@ -35,7 +35,7 @@ type Command = {
   title: string;
   subtitle: string;
   href: string;
-  type: 'section' | 'external' | 'theme';
+  type: 'section' | 'external' | 'theme' | 'toggle';
 };
 
 type ThemeId = 'cyan' | 'magenta' | 'amber' | 'orange' | 'red' | 'green';
@@ -65,6 +65,7 @@ function App() {
   const [paletteQuery, setPaletteQuery] = useState('');
   const paletteInputRef = useRef<HTMLInputElement>(null);
   const [activeTheme, setActiveTheme] = useState<ThemeId>('cyan');
+  const [cursorGlowEnabled, setCursorGlowEnabled] = useState(true);
 
   // Theme options surfaced in the command palette; default is cyan.
   const themes: ThemeDefinition[] = useMemo(
@@ -216,13 +217,27 @@ function App() {
     }
   ];
 
-  const settingCommands: Command[] = themes.map((theme) => ({
-    id: `theme-${theme.id}`,
-    title: `Theme · ${theme.label}`,
-    subtitle: theme.description,
-    href: theme.id,
-    type: 'theme' as const
-  }));
+  const themeOrder: ThemeId[] = ['cyan', 'green', 'red', 'magenta', 'orange', 'amber'];
+
+  const settingCommands: Command[] = [
+    {
+      id: 'toggle-cursor-glow',
+      title: 'Cursor Glow',
+      subtitle: cursorGlowEnabled ? 'Enabled' : 'Disabled',
+      href: 'cursor-glow',
+      type: 'toggle'
+    },
+    ...themeOrder
+      .map((id) => themes.find((theme) => theme.id === id))
+      .filter((theme): theme is ThemeDefinition => Boolean(theme))
+      .map((theme) => ({
+        id: `theme-${theme.id}`,
+        title: `Theme · ${theme.label}`,
+        subtitle: theme.description,
+        href: theme.id,
+        type: 'theme' as const
+      }))
+  ];
 
   useEffect(() => {
     AOS.init({ duration: 700, once: false });
@@ -292,6 +307,12 @@ function App() {
       return;
     }
 
+    if (command.type === 'toggle' && command.id === 'toggle-cursor-glow') {
+      setCursorGlowEnabled((prev) => !prev);
+      setPaletteQuery('');
+      return;
+    }
+
     setIsPaletteOpen(false);
     setPaletteQuery('');
 
@@ -335,10 +356,12 @@ function App() {
     if (!glow) return;
 
     const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    if (isTouchDevice) {
+    if (isTouchDevice || !cursorGlowEnabled) {
       glow.style.display = 'none';
       return;
     }
+
+    glow.style.display = 'block';
 
     const baseOpacity = 0.28;
 
@@ -374,7 +397,7 @@ function App() {
       document.removeEventListener('pointerover', handlePointerOver);
       document.removeEventListener('pointerout', handlePointerOut);
     };
-  }, []);
+  }, [cursorGlowEnabled]);
 
   return (
     <div className='relative min-h-screen bg-[#101010] text-white font-sans flex flex-col' style={themeStyles}>
@@ -395,7 +418,7 @@ function App() {
             }
           }}
         >
-          <div className='w-full max-w-xl overflow-hidden rounded-xl border border-accent-soft bg-[#0a0f12] text-white shadow-xl shadow-accent-soft'>
+          <div className='w-full max-w-2xl md:max-w-3xl overflow-hidden rounded-xl border border-accent-soft bg-[#0a0f12] text-white shadow-xl shadow-accent-soft'>
             <div className='flex items-center gap-3 border-b border-accent-soft px-4 py-3'>
               <FiSearch className='text-accent' aria-hidden='true' />
               <input
@@ -410,7 +433,7 @@ function App() {
               />
               <span className='hidden text-[10px] uppercase tracking-[0.2em] text-gray-500 sm:inline'>Esc to close</span>
             </div>
-            <ul className='max-h-72 overflow-y-auto py-2'>
+            <ul className='max-h-72 sm:max-h-80 md:max-h-96 overflow-y-auto py-2'>
               {filteredCommands.length > 0 ? (
                 filteredCommands.map((command) => (
                   <li key={command.id}>
@@ -433,9 +456,13 @@ function App() {
                           ? 'external'
                           : command.type === 'section'
                           ? 'section'
-                          : activeTheme === command.href
-                          ? 'active'
-                          : 'theme'}
+                          : command.type === 'theme'
+                          ? activeTheme === command.href
+                            ? 'active'
+                            : 'theme'
+                          : cursorGlowEnabled
+                          ? 'on'
+                          : 'off'}
                         {command.type === 'theme' && command.href === activeTheme && (
                           <FiCheck aria-hidden='true' className='text-accent' />
                         )}
