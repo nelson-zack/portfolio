@@ -61,6 +61,7 @@ function App() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [paletteMode, setPaletteMode] = useState<'navigate' | 'settings'>('navigate');
   const [paletteQuery, setPaletteQuery] = useState('');
   const paletteInputRef = useRef<HTMLInputElement>(null);
   const [activeTheme, setActiveTheme] = useState<ThemeId>('cyan');
@@ -142,7 +143,7 @@ function App() {
     });
   };
 
-  const commands: Command[] = [
+  const navigationCommands: Command[] = [
     {
       id: 'goto-about',
       title: 'About',
@@ -212,15 +213,16 @@ function App() {
       subtitle: 'pypi.org/project/commit-companion',
       href: 'https://pypi.org/project/commit-companion/',
       type: 'external'
-    },
-    ...themes.map((theme) => ({
-      id: `theme-${theme.id}`,
-      title: `Theme · ${theme.label}`,
-      subtitle: theme.description,
-      href: theme.id,
-      type: 'theme' as const
-    }))
+    }
   ];
+
+  const settingCommands: Command[] = themes.map((theme) => ({
+    id: `theme-${theme.id}`,
+    title: `Theme · ${theme.label}`,
+    subtitle: theme.description,
+    href: theme.id,
+    type: 'theme' as const
+  }));
 
   useEffect(() => {
     AOS.init({ duration: 700, once: false });
@@ -246,16 +248,28 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const isKShortcut = event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey);
-      if (isKShortcut) {
-        event.preventDefault();
-        setPaletteQuery('');
-        setIsPaletteOpen(true);
-      }
+    const key = event.key.toLowerCase();
+    const isMeta = event.metaKey || event.ctrlKey;
 
-      if (event.key === 'Escape') {
-        setIsPaletteOpen(false);
-      }
+    if (isMeta && key === 'k') {
+      event.preventDefault();
+      setPaletteMode('navigate');
+      setPaletteQuery('');
+      setIsPaletteOpen(true);
+      return;
+    }
+
+    if (isMeta && (key === ',' || (event.shiftKey && key === 'k'))) {
+      event.preventDefault();
+      setPaletteMode('settings');
+      setPaletteQuery('');
+      setIsPaletteOpen(true);
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      setIsPaletteOpen(false);
+    }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -293,7 +307,9 @@ function App() {
     }
   };
 
-  const filteredCommands = commands.filter((command) => {
+  const activeCommands = paletteMode === 'navigate' ? navigationCommands : settingCommands;
+
+  const filteredCommands = activeCommands.filter((command) => {
     const normalizedQuery = paletteQuery.trim().toLowerCase();
     if (!normalizedQuery) return true;
     return (
@@ -308,6 +324,11 @@ function App() {
       handleCommandSelect(filteredCommands[0]);
     }
   };
+
+  const palettePlaceholder =
+    paletteMode === 'navigate'
+      ? 'Jump to a section or open a project...'
+      : 'Select a theme for this session...';
 
   useEffect(() => {
     const glow = document.getElementById('cursor-glow');
@@ -367,7 +388,7 @@ function App() {
           className='fixed inset-0 z-50 flex items-start justify-center bg-black/80 px-4 py-16 backdrop-blur-sm'
           role='dialog'
           aria-modal='true'
-          aria-label='Command palette'
+          aria-label={paletteMode === 'navigate' ? 'Command palette' : 'Settings palette'}
           onClick={(event) => {
             if (event.target === event.currentTarget) {
               setIsPaletteOpen(false);
@@ -383,9 +404,9 @@ function App() {
                 value={paletteQuery}
                 onChange={(event) => setPaletteQuery(event.target.value)}
                 onKeyDown={handlePaletteInputKeyDown}
-                placeholder='Jump to section or open a project...'
+                placeholder={palettePlaceholder}
                 className='flex-1 bg-transparent text-sm font-mono text-white placeholder:text-gray-500 focus:outline-none'
-                aria-label='Command palette search'
+                aria-label={paletteMode === 'navigate' ? 'Navigation command search' : 'Settings search'}
               />
               <span className='hidden text-[10px] uppercase tracking-[0.2em] text-gray-500 sm:inline'>Esc to close</span>
             </div>
@@ -429,7 +450,9 @@ function App() {
               )}
             </ul>
             <div className='border-t border-accent-soft bg-[#090d10] px-4 py-3 text-[10px] uppercase tracking-[0.3em] text-gray-500'>
-              Press <span className='text-accent'>Esc</span> or click outside to close · Shortcut <span className='text-accent'>⌘</span>/<span className='text-accent'>Ctrl</span> + <span className='text-accent'>K</span>
+              Esc closes · Shortcuts <span className='text-accent'>⌘</span>/<span className='text-accent'>Ctrl</span> +{' '}
+              <span className='text-accent'>K</span> (Quick Jump) · <span className='text-accent'>⌘</span>/<span className='text-accent'>Ctrl</span> +{' '}
+              <span className='text-accent'>,</span> (Settings)
             </div>
           </div>
         </div>
@@ -499,17 +522,37 @@ function App() {
             </a>
           </nav>
         </div>
-        <div className='w-full pt-2 md:w-auto md:self-start md:text-right md:pl-4 md:pt-0'>
+        <div className='w-full pt-2 md:w-64 md:self-start md:text-right md:pl-4 md:pt-0 flex flex-col gap-2 md:ml-auto'>
           <button
             type='button'
-            onClick={() => setIsPaletteOpen(true)}
-            className='group inline-flex w-full items-center justify-center gap-2 rounded border border-accent-soft bg-[#0e1417] px-3 py-1.5 text-xs font-mono text-accent transition hover:border-accent hover:text-white md:w-auto md:justify-end'
+            onClick={() => {
+              setPaletteMode('navigate');
+              setPaletteQuery('');
+              setIsPaletteOpen(true);
+            }}
+            className='group inline-flex w-full items-center justify-between gap-2 rounded border border-accent-soft bg-[#0e1417] px-3 py-1.5 text-xs font-mono text-accent transition hover:border-accent hover:text-white'
           >
             Quick Jump
             <span className='flex items-center gap-1 rounded bg-[#091015] px-2 py-[2px] text-[10px] uppercase tracking-[0.3em] text-accent-soft transition group-hover:text-white/80'>
               ⌘
               <span className='text-gray-500 group-hover:text-gray-300'>/</span>
               Ctrl + K
+            </span>
+          </button>
+          <button
+            type='button'
+            onClick={() => {
+              setPaletteMode('settings');
+              setPaletteQuery('');
+              setIsPaletteOpen(true);
+            }}
+            className='group inline-flex w-full items-center justify-between gap-2 rounded border border-accent-soft bg-[#0e1417] px-3 py-1.5 text-xs font-mono text-accent transition hover:border-accent hover:text-white'
+          >
+            Settings
+            <span className='flex items-center gap-1 rounded bg-[#091015] px-2 py-[2px] text-[10px] uppercase tracking-[0.3em] text-accent-soft transition group-hover:text-white/80'>
+              ⌘
+              <span className='text-gray-500 group-hover:text-gray-300'>/</span>
+              Ctrl + ,
             </span>
           </button>
         </div>
