@@ -672,17 +672,7 @@ function App() {
               About Me
             </h2>
             <p className='max-w-2xl font-light text-gray-300 leading-relaxed'>
-              I’m a U.S. Marine Corps veteran and recent Computer Science
-              graduate focused on shipping reliable, full-stack products end to
-              end. I’ve deployed <strong>Job Radar</strong>, a hiring
-              intelligence dashboard for remote junior SWE roles,{' '}
-              <strong>Job Log</strong>, a kanban-style job tracker with
-              analytics and automations, and
-              <strong> Commit Companion</strong>, a GPT-powered CLI for
-              consistent Git commits <strong>published on PyPI</strong>. I’m now
-              looking for a full-stack engineering role where I can deliver
-              resilient backend systems, polished interfaces, and thoughtful
-              developer tooling at scale.
+              I’m a U.S. Marine Corps veteran and full-stack engineer focused on building reliable, production-ready web apps. Recent work includes Job Log, a local-first job tracker with offline storage, secure REST APIs, analytics, and CI/CD; Job Radar, a hiring-signal aggregator with ingestion metrics and dashboards; and Commit Companion, a PyPI-published CLI with 1,300+ downloads. I specialize in React + FastAPI + PostgreSQL, testing (Pytest, Vitest), and automated delivery with GitHub Actions.
             </p>
           </SectionBlock>
         </section>
@@ -847,6 +837,26 @@ function App() {
                     ingestion pipeline designed to expand into additional ATS
                     providers as they roll out.
                   </p>
+                  <div className='flex flex-wrap gap-2 mt-2'>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Hiring signals
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      ATS ingestion
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Ingestion metrics
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Data quality
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Dashboards
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      CSV export
+                    </span>
+                  </div>
                 </div>
                 <div className='mt-2'>
                   <a
@@ -884,18 +894,34 @@ function App() {
                   />
                   <h3 className='text-xl font-semibold'>Job Log</h3>
                   <p className='text-xs text-gray-500 font-mono'>
-                    Stack: React + FastAPI + PostgreSQL
+                    Stack: React, FastAPI, PostgreSQL · Zod, react-virtuoso, IndexedDB/localforage
                   </p>
                   <p className='text-xs text-gray-600 mb-2 font-mono'>
                     <strong>Role:</strong> Sole developer · Fullstack
                   </p>
                   <p className='text-sm mb-2'>
-                    <strong>Job Log</strong> is a full-stack job tracker that
-                    consolidates applications into a kanban-style pipeline with
-                    analytics, reminders, and interview timelines. Offers
-                    tag-based filtering, daily digest emails, and CSV exports to
-                    keep the job search organized end to end.
+                    Local-first job tracker with three modes (demo/personal/admin), offline storage via IndexedDB, and secure REST APIs protected by header-based API keys. Features analytics dashboards and telemetry, CSV/JSON export, and a Pytest + Vitest test suite with GitHub Actions CI/CD for automated builds and deploys.
                   </p>
+                  <div className='flex flex-wrap gap-2 mt-2'>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Local-first
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Offline
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      API-key auth
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Analytics
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      CI/CD
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Pytest+Vitest
+                    </span>
+                  </div>
                 </div>
                 <div className='mt-2'>
                   <a
@@ -946,6 +972,26 @@ function App() {
                     Commits, tone presets, and optional Git hook automation for
                     hands-free commits.
                   </p>
+                  <div className='flex flex-wrap gap-2 mt-2'>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      GPT diffs
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Conventional commits
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Tone presets
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      Git hooks
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      CLI automation
+                    </span>
+                    <span className='inline-flex items-center rounded border border-accent-soft bg-[#0e1417] px-2 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-accent-soft'>
+                      PyPI package
+                    </span>
+                  </div>
                 </div>
                 <div className='mt-2'>
                   <a
